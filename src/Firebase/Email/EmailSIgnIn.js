@@ -60,7 +60,7 @@ const EmailSIgnIn = () => {
           notifyObj.black,
         );
         navigation('/firebasehome');
-        localStorage.setItem('name', user.displayName);
+        localStorage.setItem('name', user.email);
       })
       .catch((error) => {
         if (error.code === 'auth/invalid-credential') {
