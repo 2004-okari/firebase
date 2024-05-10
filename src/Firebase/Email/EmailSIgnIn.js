@@ -137,7 +137,7 @@ const EmailSIgnIn = () => {
             <div className="line" />
           </div>
           <p>
-            Don&#39t have an account?
+            Don&#39;t have an account?
             {' '}
             <strong
               tabIndex={0}
