@@ -1,0 +1,46 @@
+.container {
+  font-family: 'Lato', sans-serif;
+  .outerdiv {
+    .innerdiv {
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      justify-content: space-between;
+      .button {
+        height: 36px;
+        border: none;
+        border-radius: 6px;
+        margin: 0 0 12px 0;
+        background-color: #151515;
+        box-shadow: 0 0 3px hsla(0, 0%, 0%, 0.2);
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+        color: #fff;
+        font-size: 16px;
+        font-family: 'Lato', sans-serif;
+
+        &:hover {
+          background-color: #27374d;
+          color: white;
+        }
+
+        &:active {
+          background-color: #272829;
+          color: white;
+        }
+      }
+    }
+    .taskcontainer {
+      display: flex;
+      flex-direction: column;
+      .taskcase {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+    }
+  }
+}
