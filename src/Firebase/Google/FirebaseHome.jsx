@@ -3,6 +3,8 @@ import { signOut } from 'firebase/auth';
 import { useNavigate } from 'react-router-dom';
 import toast, { Toaster } from 'react-hot-toast';
 import { authentication } from '../firebase.config';
+import TableDataGrid from '../../Task/TableDataGrid';
+import FirebaseFirestore from '../../Task/FirebaseFirestore';
 
 const notify = (message) => toast(message, {
   duration: 3000,
@@ -47,6 +49,8 @@ const FirebaseHome = () => {
       <button type="button" onClick={handleSignOut}>
         Log out
       </button>
+      <FirebaseFirestore />
+      <TableDataGrid />
     </div>
   );
 };
