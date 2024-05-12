@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, Input, DatePicker, Space, Form, Select, Checkbox } from 'antd';
 import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import { IoEllipsisVerticalCircleOutline } from 'react-icons/io5';
 import { db, authentication } from '../Firebase/firebase.config';
 import './Task.css';
 
@@ -10,6 +11,11 @@ const FirebaseFirestore = () => {
   const user = authentication.currentUser;
   const userId = user ? user.uid : null;
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [taskName, setTaskName] = useState('');
+  const [priority, setPriority] = useState('high');
+  const [status, setStatus] = useState('pending');
+  const [date, setDate] = useState([]);
+
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -43,11 +49,17 @@ const FirebaseFirestore = () => {
     try {
       // Add a new document to the user's tasks collection
       await addDoc(collection(db, `users/${userId}/tasks`), {
-        task: 'Ada',
-        priority: 'high',
-        date: '12-07-2024',
-        status: 'completed',
+        task: taskName,
+        priority,
+        date: date.join(' - '), // Combine selected date range into a string
+        status,
       });
+
+      // Clear form fields after adding the task
+      setTaskName('');
+      setPriority('high');
+      setStatus('pending');
+      setDate([]);
     } catch (e) {
       console.error('Error adding document: ', e);
     }
@@ -62,7 +74,7 @@ const FirebaseFirestore = () => {
               style={{
                 fontSize: '20px',
                 fontFamily: 'Lato',
-                fontWeight: '600',
+                fontWeight: '700',
                 margin: 0,
               }}
             >
@@ -70,6 +82,7 @@ const FirebaseFirestore = () => {
               <span
                 style={{
                   fontFamily: 'Simonetta',
+                  fontWeight: '500',
                 }}
               >
                 {user.displayName}
@@ -88,10 +101,45 @@ const FirebaseFirestore = () => {
           {tasks.map((task) => (
             <div className="taskcase" key={task.id}>
               <Checkbox />
-              <p>{task.task}</p>
-              <p>{task.priority}</p>
-              <p>{task.date}</p>
-              <p>{task.status}</p>
+              <p
+                style={{
+                  margin: '0 8px',
+                }}
+              >
+                {task.task}
+              </p>
+              <p
+                style={{
+                  margin: '0 8px',
+                }}
+              >
+                {task.priority}
+              </p>
+              <p
+                style={{
+                  margin: '0 8px',
+                }}
+              >
+                {task.date}
+              </p>
+              <p
+                style={{
+                  margin: '0 8px',
+                }}
+              >
+                {task.status}
+              </p>
+              <IoEllipsisVerticalCircleOutline
+                onClick={() => (
+                  <Form.Item>
+                    <Select onChange={() => {}}>
+                      <Select.Option value="high">High</Select.Option>
+                      <Select.Option value="medium">Medium</Select.Option>
+                      <Select.Option value="low">Low</Select.Option>
+                    </Select>
+                  </Form.Item>
+                )}
+              />
             </div>
           ))}
         </div>
@@ -110,7 +158,10 @@ const FirebaseFirestore = () => {
           Task
         </p>
         <Form.Item>
-          <Input />
+          <Input
+            value={taskName}
+            onChange={(e) => setTaskName(e.target.value)}
+          />
         </Form.Item>
         <p
           style={{
@@ -120,7 +171,7 @@ const FirebaseFirestore = () => {
           Priority:
         </p>
         <Form.Item>
-          <Select>
+          <Select value={priority} onChange={(value) => setPriority(value)}>
             <Select.Option value="high">High</Select.Option>
             <Select.Option value="medium">Medium</Select.Option>
             <Select.Option value="low">Low</Select.Option>
@@ -134,7 +185,7 @@ const FirebaseFirestore = () => {
           Status:
         </p>
         <Form.Item>
-          <Select>
+          <Select value={status} onChange={(value) => setStatus(value)}>
             <Select.Option value="completed">Completed</Select.Option>
             <Select.Option value="pending">Pending</Select.Option>
             <Select.Option value="inProgress">In Progress</Select.Option>
@@ -148,7 +199,7 @@ const FirebaseFirestore = () => {
           Date:
         </p>
         <Space direction="vertical" size={12}>
-          <RangePicker />
+          <RangePicker value={date} onChange={(dates) => setDate(dates)} />
         </Space>
       </Modal>
     </div>
