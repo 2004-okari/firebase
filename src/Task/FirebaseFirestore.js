@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Input, DatePicker, Space, Form, Select, Checkbox } from 'antd';
-import { collection, addDoc, onSnapshot } from 'firebase/firestore';
+import {
+  Modal, Input, DatePicker, Space, Form, Select, Checkbox,
+} from 'antd';
+import {
+  collection, addDoc, onSnapshot, deleteDoc, updateDoc, doc,
+} from 'firebase/firestore';
 import { IoEllipsisVerticalCircleOutline } from 'react-icons/io5';
 import { db, authentication } from '../Firebase/firebase.config';
 import './Task.css';
@@ -28,7 +32,7 @@ const FirebaseFirestore = () => {
           fetchedTasks.push({ id: doc.id, ...doc.data() });
         });
         setTasks(fetchedTasks);
-      }
+      },
     );
 
     // Unsubscribe from Firestore listener when component unmounts
@@ -65,6 +69,23 @@ const FirebaseFirestore = () => {
     }
   };
 
+  const handleDeleteTask = async (id) => {
+    try {
+      await deleteDoc(doc(db, `users/${userId}/tasks`, id));
+    } catch (e) {
+      console.error('Error deleting document: ', e);
+    }
+  };
+
+  const handleEditTask = () => {
+    // TODO: Implement task editing
+    try {
+
+    }catch (e) {
+      console.log(Ërror updating task", e);
+    }
+  };
+
   return (
     <div className="container">
       <div className="outerdiv">
@@ -78,7 +99,8 @@ const FirebaseFirestore = () => {
                 margin: 0,
               }}
             >
-              Good Morning,{' '}
+              Good Morning,
+              {' '}
               <span
                 style={{
                   fontFamily: 'Simonetta',
@@ -98,50 +120,45 @@ const FirebaseFirestore = () => {
           </button>
         </div>
         <div className="taskcontainer">
-          {tasks.map((task) => (
-            <div className="taskcase" key={task.id}>
-              <Checkbox />
-              <p
-                style={{
-                  margin: '0 8px',
-                }}
-              >
-                {task.task}
-              </p>
-              <p
-                style={{
-                  margin: '0 8px',
-                }}
-              >
-                {task.priority}
-              </p>
-              <p
-                style={{
-                  margin: '0 8px',
-                }}
-              >
-                {task.date}
-              </p>
-              <p
-                style={{
-                  margin: '0 8px',
-                }}
-              >
-                {task.status}
-              </p>
-              <IoEllipsisVerticalCircleOutline
-                onClick={() => (
-                  <Form.Item>
-                    <Select onChange={() => {}}>
-                      <Select.Option value="high">High</Select.Option>
-                      <Select.Option value="medium">Medium</Select.Option>
-                      <Select.Option value="low">Low</Select.Option>
-                    </Select>
-                  </Form.Item>
-                )}
-              />
-            </div>
-          ))}
+          {tasks.map((task) => {
+            console.log({ task });
+            return (
+              <div className="taskcase" key={task.id}>
+                <Checkbox />
+                <p
+                  style={{
+                    margin: '0 8px',
+                  }}
+                >
+                  {task.task}
+                </p>
+                <p
+                  style={{
+                    margin: '0 8px',
+                  }}
+                >
+                  {task.priority}
+                </p>
+                <p
+                  style={{
+                    margin: '0 8px',
+                  }}
+                >
+                  {task.date}
+                </p>
+                <p
+                  style={{
+                    margin: '0 8px',
+                  }}
+                >
+                  {task.status}
+                </p>
+                <IoEllipsisVerticalCircleOutline
+                  onClick={() => handleDeleteTask(task.id)}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
       <Modal
